@@ -108,6 +108,8 @@ export async function deleteInvoice(id: string) {
   revalidatePath("dashboard/invoices");
 }
 
+type AuthErrorWithType = AuthError & { type: string };
+
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData
@@ -116,7 +118,7 @@ export async function authenticate(
     await signIn("credentials", formData);
   } catch (error) {
     if (error instanceof AuthError) {
-      switch ((error as any).type) {
+      switch ((error as AuthErrorWithType).type) {
         case "CredentialsSignin":
           return "Invalid credentials.";
         default:
